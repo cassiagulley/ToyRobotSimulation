@@ -26,13 +26,6 @@ class ToyRobot:
     def __init__(self):
         logging.info("Toy Robot created")
 
-    # Listen for commands 
-    def main(self):
-        # listen to standard input
-        while True:
-            command = input("Enter command: ")
-            self.handle_command(command)
-    
     # Handle commands given via standard input
     def handle_command(self, command):
         if command[0] == "PLACE":
