@@ -35,23 +35,25 @@ class ToyRobot:
     
     # Handle commands given via standard input
     def handle_command(self, command):
-        if command.startswith("PLACE"):
-            # decode the command into x, y, and f variables
-            x, y, f = self.decode_place_input(command)
-            self.place(x, y, f)
+        if command[0] == "PLACE":
+            # if command can be decoded into x, y, and f variables, place the robot
+            if self.decode_place_input(command[1]) != None:
+                x, y, f = self.decode_place_input(command[1])
+                self.place(x, y, f)
+
         # checking if the robot has been placed
         elif self.current_direction != "":
             # check for MOVE command
-            if command == "MOVE":
+            if command[0] == "MOVE":
                 self.move()
             # check for LEFT command
-            elif command == "LEFT":
+            elif command[0] == "LEFT":
                 self.left()
             # check for RIGHT command
-            elif command == "RIGHT":
+            elif command[0] == "RIGHT":
                 self.right()
             # check for REPORT command
-            elif command == "REPORT":
+            elif command[0] == "REPORT":
                 self.report()
             else:
                 logging.error("Invalid command")
@@ -70,7 +72,9 @@ class ToyRobot:
             # set the current position and direction
             self.current_position = (x, y)
             self.current_direction = f
-            logging.info("Placed at: ", self.current_position, self.current_direction)
+            # log the placement
+            logging.info("Robot placed at: " + str(self.current_position)+ " facing " + self.current_direction)
+            
 
     # Move the robot 1 unit towards the direction it is facing
     def move(self):
@@ -123,24 +127,24 @@ class ToyRobot:
         status = ', '.join(str(x) for x in self.current_position) + ", " + self.current_direction
         print("Robot Position:", status)
         
-    
+
     # Helper Functions
 
     # Decode placement command (PLACE X,Y,F) into x, y, and f and return them
     def decode_place_input(self, command):
+        command = command.split(',')
         # check if the command has the correct number of arguments
-        if len(command) != 4:
-            logging.error("Invalid command length: expected 4 arguments, received ", len(command), " arguments")
-        # check if the command has the correct format
-        elif command[0] != "PLACE" or command[2] != "," or command[4] != ",":
+        if len(command) != 3:
+            logging.error("Invalid command length: expected 4 arguments, received " + str(len(command)) + " arguments")
+        elif command[0].isdigit() == False or command[1].isdigit() == False or command[2] not in direction_mapping.keys():
             logging.error("Invalid command format: expected PLACE X,Y,F")
+        # check if the command has the correct format
         else:
-            # split the command into a list
-            command = command.split()
-            # get the x, y, and f values
-            x = command[1]
-            y = command[3]
-            f = command[5]
+            # assign and convert x, y, and f values 
+            # convert x and y to 
+            x = int(command[0])
+            y = int(command[1])
+            f = command[2]
             # return the values
             return x, y, f
 
@@ -177,3 +181,35 @@ class ToyRobot:
             return self.get_direction(new_dir_num)
         else:
             logging.error("Invalid turn direction")
+
+# Main function to listen to stdin commands
+if __name__ == "__main__":
+    # create a list of valid commands
+    valid_commands = ["PLACE", "MOVE", "LEFT", "RIGHT", "REPORT"]
+    # create a robot object
+    robot = ToyRobot()
+    # listen to stdin
+    while True:
+        # get the command from stdin and validate it
+        command = input()
+        command = command.split()
+        if command[0] not in valid_commands:
+            logging.error("Invalid command")
+        else:
+            # execute the command
+            robot.handle_command(command)
+
+        
+
+ 
+    
+
+
+
+
+
+    
+
+
+ 
+
