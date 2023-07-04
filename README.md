@@ -13,9 +13,8 @@ To run and interact with the simulation, run the Python script in the root direc
 ```
 python3 main.py
 ```
-Create 
 
-After this you can execute any of the following commands in the root directory of the project:
+After this, you can execute any of the following commands in the root directory of the project:
 ```
 PLACE X,Y,F
 MOVE
